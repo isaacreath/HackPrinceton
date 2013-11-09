@@ -61,7 +61,7 @@ public class Requests {
 			return null;
 
 	  }
-	  private static ArrayList<String> getTrending(){
+	  public static ArrayList<String> getTrending(){
 		  String result;
 		  try {
 			result = Requests.GetPageContent("https://api.twitter.com/1.1/trends/place.json?id=1");

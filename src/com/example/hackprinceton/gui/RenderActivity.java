@@ -5,6 +5,8 @@ package com.example.hackprinceton.gui;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.example.hackprinceton.backend.Requests;
+
 //import com.example.hackprinceton.backend.Requests;
 
 import android.app.Activity;
@@ -102,6 +104,7 @@ public class RenderActivity extends Activity{
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
+			ArrayList<String> hashtags = null;
 			while (running) {
 				if (!holder.getSurface().isValid())
 					continue;
@@ -109,8 +112,9 @@ public class RenderActivity extends Activity{
 				
 				lastState = state;
 				state = 1;
+				
 				Canvas canvas = holder.lockCanvas();
-				canvas.drawColor(Color.WHITE);
+				canvas.drawColor(Color.RED - 50);
 				
 				//update
 				for(Bubble bub : b){
@@ -121,11 +125,18 @@ public class RenderActivity extends Activity{
 
 				
 				if(state != lastState){
-				//	s = Requests.makeRequests();
+					hashtags = Requests.getTrending();
+					for(String x : hashtags){
+						b.add(new Bubble(new Random().nextFloat()*1000 + 200, new Random().nextFloat() * 1000 + 100, 1, x));
+					}
+
+				}
+				if(hashtags != null){
 				}
 				
+				
 				if(s != null){
-					canvas.drawText(s, 100f, 100f, new Paint());
+					//canvas.drawText(s, 100f, 100f, new Paint());
 				}
 				
 				

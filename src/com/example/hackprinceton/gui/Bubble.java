@@ -144,8 +144,7 @@ public class Bubble {
 		 * mTextPaint.setTextSize(textSize); mTextPaint.setTextScaleX(scale);
 		 */
 
-		c.drawText("a: " + a + " red: " + r + " green: " + g + " blue: " + b,
-				60, 60, p);
+
 
 		p.setColor(newColor);
 		p.setStyle(Paint.Style.FILL_AND_STROKE);
