@@ -25,12 +25,10 @@ import android.view.View.OnTouchListener;
 
 public class RenderActivity extends Activity{
 	private RenderView rv;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
@@ -55,9 +53,10 @@ public class RenderActivity extends Activity{
 	}
 	
 	private class RenderView extends SurfaceView implements Runnable, OnTouchListener{
-	
+		private boolean changeSize;
 		private SurfaceHolder holder;
 		private Thread renderThread;
+		
 		//private com.example.hackprinceton.backend.Requests r;
 		
 		//TEMP
@@ -71,7 +70,8 @@ public class RenderActivity extends Activity{
 		
 		public RenderView(Context context) {
 			super(context);
-			
+			changeSize = false;
+			setOnTouchListener(this);
 			renderThread = null;
 			holder = getHolder();
 			running = false;
@@ -80,6 +80,15 @@ public class RenderActivity extends Activity{
 			
 			b = new ArrayList<Bubble>();		
 			
+		}
+		public int getState(){
+			return state;
+		}
+		public int getLastState(){
+			return lastState;
+		}
+		public void setState(int s){
+			state =s;
 		}
 		
 		public void resume(){
@@ -126,13 +135,27 @@ public class RenderActivity extends Activity{
 				
 				if(state != lastState){
 					hashtags = Requests.getTrending();
-					for(String x : hashtags){
-						b.add(new Bubble(new Random().nextFloat()*1000 + 200, new Random().nextFloat() * 1000 + 100, 1, x));
-					}
+					//for(String x : hashtags){
+						b.add(new Bubble(new Random().nextFloat()*1000 + 200, new Random().nextFloat() * 1000 + 100, 1, hashtags.get(0)));
+					//}
+						
 
 				}
-				if(hashtags != null){
+//				if(b.get(0).getRadius() > 600){
+//					changeSize = true;
+//					
+//				}
+//				if(b.get(0).getRadius()/2 < 200){
+//					changeSize = false;
+//				}
+				if(changeSize && b.get(0).getRadius() > 50){
+					b.get(0).shrink();
 				}
+				else if(!changeSize){
+					b.get(0).grow();
+				}
+				
+				b.get(0).floatBehavior();
 				
 				
 				if(s != null){
@@ -150,11 +173,18 @@ public class RenderActivity extends Activity{
 				}
 			}
 		}
+		
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			// TODO Auto-generated method stub
-			return false;
+			if(event.getAction() == MotionEvent.ACTION_UP){
+				changeSize = true;	
+			}
+			else if(event.getAction() == MotionEvent.ACTION_DOWN){
+				changeSize = false;
+			}
+			
+			return true;
 		}
 	}
 }

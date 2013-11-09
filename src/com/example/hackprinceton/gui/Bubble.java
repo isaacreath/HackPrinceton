@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
@@ -38,28 +39,30 @@ public class Bubble {
 	// the size of the border in pixels
 	private final int BORDER_SIZE = 20;
 	private final int FADE_CONSTANT = 250;
+	private float startX, startY;
+	private final double pct = .15;
 
 	public Bubble(float locx, float locy,float vy,String t) {
 		x = locx;
 		y = locy;
-
+		startX = x;
+		startY = y;
 		vx = 0;
 		this.vy = vy * -1;
 		
-		color = Color.GREEN;
+		color = Color.BLUE;
 
-		radius = 200;
+		radius = 100;
 
 		text = t;
 
 		hasChanged = true;
 
 		scale = 0.2f;
-
-		textSize = 40;
+		textSize = (int) (radius* pct);
 
 		TextPaint mTextPaint = new TextPaint();
-		
+		mTextPaint.setTypeface(Typeface.create("Helvetica", Typeface.NORMAL));
 		Rect rec = new Rect((int) x - radius / 2, (int) y - radius / 2, (int) x
 				+ radius / 2, (int) y + radius / 2);
 		Rect rec2 = new Rect();
@@ -96,7 +99,7 @@ public class Bubble {
 		p.setStyle(Paint.Style.STROKE);
 		p.setStrokeWidth(BORDER_SIZE);
 
-		p.setAntiAlias(true);
+		p.setAntiAlias(false);
 
 		// p.setColorFilter(ColorFilter.)
 		c.drawCircle(x, y, radius, p);
@@ -159,16 +162,35 @@ public class Bubble {
 	public void grow() {
 		hasChanged = false;
 		radius += 10;
+		textSize = (int) (radius* pct);
+
 		
 	}
 
 	public void shrink() {
 		hasChanged = true;
-		radius -= 5;
+		radius -= 10;
+		textSize = (int) (radius* pct);
+
 	}
 
+	public float getX(){
+		return x;
+	}
+	public float getY(){
+		return y;
+	}
 	public int getRadius() {
 		return radius;
+	}
+	public void floatBehavior(){
+		if(y > startY + 40){
+			vy *= -1;
+		}
+		if(y < startY - 40){
+			vy *= -1;
+		}
+		
 	}
 	
 	public void setV(float vx, float vy){
