@@ -33,15 +33,15 @@ public class Requests {
 	  private static final String USER_AGENT = "Mozilla/5.0";
 	  
 	  public static ArrayList<String> getTweet(String hashtag){
-		  
-			String result;
+		  	hashtag = hashtag.replaceAll("#", "%23");
+		  	hashtag = hashtag.replaceAll(" ", "+");
+		  	String result;
+			
 			try {
 				result = Requests.GetPageContent("https://api.twitter.com/1.1/search/tweets.json?q=%23" + hashtag + "&locale=ja&");
-				System.out.println(result);
 				Object jsonResult = JSONValue.parse(result);
 				JSONObject resultArray = (JSONObject)jsonResult;
 				JSONArray a =(JSONArray) resultArray.get("statuses");
-				System.out.println(a.get(0));
 				ArrayList<JSONObject> objectList = new ArrayList<JSONObject>();
 				for(int i = 0; i < a.size(); i++){
 					JSONObject b = (JSONObject)a.get(i);
@@ -55,16 +55,15 @@ public class Requests {
 				return tweets;
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return null;
+			return new ArrayList<String>();
 
 	  }
 	  public static ArrayList<String> getTrending(){
 		  String result;
 		  try {
-			result = Requests.GetPageContent("https://api.twitter.com/1.1/trends/place.json?id=1");
+			result = Requests.GetPageContent("https://api.twitter.com/1.1/trends/place.json?id=2459115");
 			Object resultJSON = JSONValue.parse(result);
 			JSONArray a = (JSONArray)resultJSON;
 			
